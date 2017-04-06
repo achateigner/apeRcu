@@ -1,0 +1,17 @@
+Package: ap
+Type: Package
+Title: Apercu is giving you a quick look at your data
+Version: 0.1.1
+Author: Aurélien Chateigner <aurelien.chateigner@gmail.com>
+Maintainer: Aurélien Chateigner <aurelien.chateigner@gmail.com>
+Description: The goal is to print an "aperçu", a short view of a vector, a
+    matrix, a data.frame, a list or an array. By default, it prints the first 5
+    elements of each dimension. By default, the number of columns is equal to
+    the number of lines. If you want to control the selection of the elements,
+    you can pass a list, with each element being a vector giving the selection
+    for each dimension.
+License: CC BY-SA 4.0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports: pls
