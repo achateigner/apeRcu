@@ -93,8 +93,8 @@ ap <- function(object, limitsList=limitsLister(object)) {
       lapply(object[c(limitsList[[1]])],
              function(x) apercu(x, limitsList[2:length(limitsList)]))
     }
-  } else if(is.data.frame(object) & sum(sapply(object,
-                                               function(x) class(x) == "AsIs"))){
+  } else if(is.data.frame(object) & sum(unlist(sapply(object,
+                                               function(x) class(x) == "AsIs")))){
     if(is.list(limitsList) & length(limitsList) == 0) {
       limitsList = lapply(object, function(x) lapply(seq_along(dim(x)),
                                                        function(y) 1:5))
