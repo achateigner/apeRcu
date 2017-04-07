@@ -4,10 +4,10 @@
 \alias{limitsLister}
 \title{limitsLister}
 \usage{
-limitsLister(object)
+limitsLister(objet)
 }
 \arguments{
-\item{object}{The object for which the dimensions should be checked}
+\item{objet}{The object for which the dimensions should be checked}
 }
 \value{
 A list of the dimensions if none is given

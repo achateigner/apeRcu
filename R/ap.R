@@ -83,6 +83,7 @@
 #' library(pls)
 #' data("gasoline")
 #' ap(gasoline)
+#' ap(gasoline, list(1:10, list(1:10,1:10)))
 #' @export
 ap <- function(object, limitsList=limitsLister(object)) {
   if (is.list(object) & !is.data.frame(object)) {
@@ -114,15 +115,17 @@ ap <- function(object, limitsList=limitsLister(object)) {
                                                        function(y) 1:5))
     } else if(is.list(limitsList) & length(limitsList) > 0){
       lm2 <- limitsLister(object)
-      if (all.equal(limitsList, lm2)) {
-        limitsList[which(sapply(object, function(x) class(x)) == "AsIs")] <-
-          list(list(1:5,1:5))
+      if (isTRUE(all.equal(limitsList, lm2))) {
+        limitsList <- lapply(object, function(x) {
+          a <- limitsLister(x)
+          if(length(a) == 0) a <- list(1:5) else a
+          })
       }
       limitsList <- lapply(limitsList, function(x){
         if (is.list(x)) {
           x
         } else {
-            list(x)
+          list(x)
         }
       })
     }
@@ -151,15 +154,15 @@ ap <- function(object, limitsList=limitsLister(object)) {
 }
 
 #' limitsLister
-#' @param object The object for which the dimensions should be checked
+#' @param objet The object for which the dimensions should be checked
 #' @return A list of the dimensions if none is given
 #' @keywords internal
-limitsLister <- function(object){
-  lapply(seq_along(dim(object)), function(x){
-    if (dim(object)[x] > 5) {
+limitsLister <- function(objet){
+  lapply(seq_along(dim(objet)), function(x){
+    if (dim(objet)[x] > 5) {
      1:5
     } else {
-     1:dim(object)[x]
+     1:dim(objet)[x]
     }
   })
 }

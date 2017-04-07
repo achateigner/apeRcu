@@ -96,4 +96,5 @@ ap(a3, list(1:4,3:5,2:3,3:4,7:10))
 library(pls)
 data("gasoline")
 ap(gasoline)
+ap(gasoline, list(1:10, list(1:10,1:10)))
 }
