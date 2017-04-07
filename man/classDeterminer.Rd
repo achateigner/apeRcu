@@ -15,3 +15,4 @@ the classes of the object and its elements if list
 \description{
 classDeterminer
 }
+\keyword{internal}

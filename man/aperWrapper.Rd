@@ -17,3 +17,4 @@ the apercu object, of class ap
 \description{
 aperWrapper
 }
+\keyword{internal}

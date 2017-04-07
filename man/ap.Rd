@@ -60,6 +60,14 @@ ap(a)
 ap(a2)
 ap(a3)
 
+# To print also the dimensions and classes
+print(ap(v), printAll = TRUE)
+print(ap(m), printAll = TRUE)
+print(ap(df), printAll = TRUE)
+print(ap(li), printAll = TRUE)
+print(ap(a), printAll = TRUE)
+print(ap(a2), printAll = TRUE)
+print(ap(a3), printAll = TRUE)
 # if the size of the object is very small :
 sm <- matrix(1:4, 2, 2)
 sDf <- as.data.frame(sm)

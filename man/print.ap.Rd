@@ -4,12 +4,12 @@
 \alias{print.ap}
 \title{print.ap}
 \usage{
-\method{print}{ap}(x, all = FALSE)
+\method{print}{ap}(x, printAll = FALSE, ...)
 }
 \arguments{
 \item{x}{the ap class object that has to be printed}
 
-\item{all}{should all the elements be printed ?}
+\item{printAll}{should all the elements be printed ?}
 }
 \value{
 prints the object, only the apercu or with dimensions and classes
@@ -17,3 +17,4 @@ prints the object, only the apercu or with dimensions and classes
 \description{
 print.ap
 }
+\keyword{internal}

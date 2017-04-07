@@ -46,6 +46,15 @@
 #' ap(a2)
 #' ap(a3)
 #'
+#' # To print also the dimensions and classes
+#' print(ap(v), printAll = TRUE)
+#' print(ap(m), printAll = TRUE)
+#' print(ap(df), printAll = TRUE)
+#' print(ap(li), printAll = TRUE)
+#' print(ap(a), printAll = TRUE)
+#' print(ap(a2), printAll = TRUE)
+#' print(ap(a3), printAll = TRUE)
+
 #' # if the size of the object is very small :
 #' sm <- matrix(1:4, 2, 2)
 #' sDf <- as.data.frame(sm)
@@ -79,7 +88,21 @@ ap <- function(object, limitsList=limitsLister(object)) {
   if (is.list(object) & !is.data.frame(object)) {
     if(is.list(limitsList) & length(limitsList) == 0) {
       limitsList=list(c(1:5))
-      lapply(object[c(limitsList[[1]])], function(x) aperWrapper(x))
+      res <- lapply(object[c(limitsList[[1]])], function(x) aperWrapper(x))
+      res2 = list()
+      res2$apercu <- lapply(res, function(x) x$apercu)
+      res2$dimensions <- lapply(res, function(x) x$dimensions)
+      res2$classes <- lapply(res, function(x) x$classes)
+      if (length(unique(res2$dimensions)) == 1 &
+          length(unique(res2$classes)) == 1){
+        res3 = list()
+        res3$apercu <- res2$apercu
+        res3$dimensions <- unlist(unique(res2$dimensions))
+        res3$classes <- unlist(unique(res2$classes))
+        res2 <- res3
+      }
+      class(res2) <- c("ap", class(res2))
+      return(res2)
     } else {
       lapply(object[c(limitsList[[1]])],
              function(x) aperWrapper(x, limitsList[2:length(limitsList)]))
@@ -103,12 +126,25 @@ ap <- function(object, limitsList=limitsLister(object)) {
         }
       })
     }
-    res <- as.data.frame(lapply(seq_along(object),
-                                function(x){
-                                  ap(object[[x]], limitsList[[x]])
-                                }))
-    names(res$apercu) <- names(object)
-    return(res)
+    res <- lapply(seq_along(object),
+                  function(x){
+                    ap(object[[x]], limitsList[[x]])
+                  })
+    names(res) <- names(object)
+    res2 = list()
+    res2$apercu <- as.data.frame(lapply(res, function(x) x$apercu))
+    res2$dimensions <- lapply(res, function(x) x$dimensions)
+    res2$classes <- lapply(res, function(x) x$classes)
+    if (length(unique(res2$dimensions)) == 1 &
+        length(unique(res2$classes)) == 1){
+      res3 = list()
+      res3$apercu <- res2$apercu
+      res3$dimensions <- unlist(unique(res2$dimensions))
+      res3$classes <- unlist(unique(res2$classes))
+      res2 <- res3
+    }
+    class(res2) <- c("ap", class(res2))
+    return(res2)
   } else {
     aperWrapper(object, limitsList)
   }
@@ -117,6 +153,7 @@ ap <- function(object, limitsList=limitsLister(object)) {
 #' limitsLister
 #' @param object The object for which the dimensions should be checked
 #' @return A list of the dimensions if none is given
+#' @keywords internal
 limitsLister <- function(object){
   lapply(seq_along(dim(object)), function(x){
     if (dim(object)[x] > 5) {
@@ -132,6 +169,7 @@ limitsLister <- function(object){
 #' @param l the limits
 #' @param c the classes
 #' @return The apercu
+#' @keywords internal
 apercu <- function(o, l=lapply(seq_along(dim(o)), function(x) 1:5)){
   if(is.list(l) & length(l) == 0){
     if(is.matrix(o)){
@@ -145,6 +183,7 @@ apercu <- function(o, l=lapply(seq_along(dim(o)), function(x) 1:5)){
 #' @param ob the object sent to apercu
 #' @param li the limits
 #' @return the apercu object, of class ap
+#' @keywords internal
 aperWrapper <- function(ob, li=lapply(seq_along(dim(ob)), function(x) 1:5)){
   resultat <- apercu(ob, li)
   dims <- dim(ob)
@@ -157,6 +196,7 @@ aperWrapper <- function(ob, li=lapply(seq_along(dim(ob)), function(x) 1:5)){
 #' classDeterminer
 #' @param obj the object for which the classes have to be determined
 #' @return the classes of the object and its elements if list
+#' @keywords internal
 classDeterminer <- function(obj){
   if (is.list(obj)){
     cla <- lapply(obj, class)
@@ -171,17 +211,21 @@ classDeterminer <- function(obj){
   return(cla)
 }
 
+
 #' print.ap
 #' @param x the ap class object that has to be printed
-#' @param all should all the elements be printed ?
+#' @param printAll should all the elements be printed ?
 #' @return prints the object, only the apercu or with dimensions and classes
-print.ap <- function(x, all = FALSE){
+#' @export
+#' @keywords internal
+print.ap <- function(x, printAll = FALSE, ...){
   if (!inherits(x, "ap"))
     stop("Argument 'x' must be an object of class \"ap\".")
-  if (all == FALSE) {
+  if (!isTRUE(printAll)) {
     print(x$apercu)
   } else {
     class(x) <- "list"
     print(x)
   }
 }
+

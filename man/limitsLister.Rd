@@ -15,3 +15,4 @@ A list of the dimensions if none is given
 \description{
 limitsLister
 }
+\keyword{internal}
