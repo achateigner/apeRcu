@@ -76,22 +76,13 @@
 #' ap(gasoline)
 #' @export
 ap <- function(object, limitsList=limitsLister(object)) {
-  apercu <- function(o, l=lapply(seq_along(dim(o)), function(x) 1:5)){
-    if(is.list(l) & length(l) == 0){
-      if(is.matrix(o)){
-        l=list(c(1:5), c(1:5))
-      } else l=list(c(1:5))
-    }
-    do.call(`[`, c(list(o), l))
-  }
-
   if (is.list(object) & !is.data.frame(object)) {
     if(is.list(limitsList) & length(limitsList) == 0) {
       limitsList=list(c(1:5))
-      lapply(object[c(limitsList[[1]])], function(x) apercu(x))
+      lapply(object[c(limitsList[[1]])], function(x) aperWrapper(x))
     } else {
       lapply(object[c(limitsList[[1]])],
-             function(x) apercu(x, limitsList[2:length(limitsList)]))
+             function(x) aperWrapper(x, limitsList[2:length(limitsList)]))
     }
   } else if(is.data.frame(object) & sum(unlist(sapply(object,
                                                function(x) class(x) == "AsIs")))){
@@ -101,7 +92,8 @@ ap <- function(object, limitsList=limitsLister(object)) {
     } else if(is.list(limitsList) & length(limitsList) > 0){
       lm2 <- limitsLister(object)
       if (all.equal(limitsList, lm2)) {
-        limitsList[sapply(object, function(x) class(x) == "AsIs")] <- list(list(1:5,1:5))
+        limitsList[which(sapply(object, function(x) class(x)) == "AsIs")] <-
+          list(list(1:5,1:5))
       }
       limitsList <- lapply(limitsList, function(x){
         if (is.list(x)) {
@@ -115,10 +107,10 @@ ap <- function(object, limitsList=limitsLister(object)) {
                                 function(x){
                                   ap(object[[x]], limitsList[[x]])
                                 }))
-    names(res) <- names(object)
+    names(res$apercu) <- names(object)
     return(res)
   } else {
-    apercu(object, limitsList)
+    aperWrapper(object, limitsList)
   }
 }
 
@@ -133,4 +125,63 @@ limitsLister <- function(object){
      1:dim(object)[x]
     }
   })
+}
+
+#' apercu
+#' @param o the object for which I need to have the apercu
+#' @param l the limits
+#' @param c the classes
+#' @return The apercu
+apercu <- function(o, l=lapply(seq_along(dim(o)), function(x) 1:5)){
+  if(is.list(l) & length(l) == 0){
+    if(is.matrix(o)){
+      l=list(c(1:5), c(1:5))
+    } else l=list(c(1:5))
+  }
+  do.call(`[`, c(list(o), l))
+}
+
+#' aperWrapper
+#' @param ob the object sent to apercu
+#' @param li the limits
+#' @return the apercu object, of class ap
+aperWrapper <- function(ob, li=lapply(seq_along(dim(ob)), function(x) 1:5)){
+  resultat <- apercu(ob, li)
+  dims <- dim(ob)
+  cl <- classDeterminer(ob)
+  result <- list(apercu=resultat, dimensions=dims, classes=cl)
+  class(result) <- c("ap", class(result))
+  return(result)
+}
+
+#' classDeterminer
+#' @param obj the object for which the classes have to be determined
+#' @return the classes of the object and its elements if list
+classDeterminer <- function(obj){
+  if (is.list(obj)){
+    cla <- lapply(obj, class)
+    if (all(cla[[1]] == cla)){
+      cla <- list(object = class(obj), elements = cla[[1]])
+    } else {
+      cla <- list(object = class(obj), elements = unlist(cla))
+    }
+  } else{
+    cla <- class(obj)
+  }
+  return(cla)
+}
+
+#' print.ap
+#' @param x the ap class object that has to be printed
+#' @param all should all the elements be printed ?
+#' @return prints the object, only the apercu or with dimensions and classes
+print.ap <- function(x, all = FALSE){
+  if (!inherits(x, "ap"))
+    stop("Argument 'x' must be an object of class \"ap\".")
+  if (all == FALSE) {
+    print(x$apercu)
+  } else {
+    class(x) <- "list"
+    print(x)
+  }
 }
