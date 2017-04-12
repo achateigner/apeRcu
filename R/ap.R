@@ -89,6 +89,7 @@ ap <- function(object, limitsList=limitsLister(object)) {
   if (is.list(object) & !is.data.frame(object)) {
     if(is.list(limitsList) & length(limitsList) == 0) {
       limitsList=list(c(1:5))
+      if (length(object) < 5){limitsList=list(c(1:length(object)))}
       res <- lapply(object[c(limitsList[[1]])], function(x) aperWrapper(x))
       res2 = list()
       res2$apercu <- lapply(res, function(x) x$apercu)
@@ -180,7 +181,15 @@ apercu <- function(o, l=lapply(seq_along(dim(o)), function(x) 1:5)){
   if(is.list(l) & length(l) == 0){
     if(is.matrix(o)){
       l=list(c(1:5), c(1:5))
-    } else l=list(c(1:5))
+    } else if(is.null(dim(o))){
+      if (length(o) < 5){
+        l=list(c(1:length(o)))
+      } else{
+        l=list(c(1:5))
+      }
+    } else{
+      l=list(c(1:5))
+    }
   }
   do.call(`[`, c(list(o), l))
 }
