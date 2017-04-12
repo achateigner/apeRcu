@@ -108,46 +108,49 @@ ap <- function(object, limitsList=limitsLister(object)) {
       lapply(object[c(limitsList[[1]])],
              function(x) aperWrapper(x, limitsList[2:length(limitsList)]))
     }
-  } else if(is.data.frame(object) & sum(unlist(sapply(object,
-                                               function(x) class(x) == "AsIs")))){
-    if(is.list(limitsList) & length(limitsList) == 0) {
-      limitsList = lapply(object, function(x) lapply(seq_along(dim(x)),
-                                                       function(y) 1:5))
-    } else if(is.list(limitsList) & length(limitsList) > 0){
-      lm2 <- limitsLister(object)
-      if (isTRUE(all.equal(limitsList, lm2))) {
-        limitsList <- lapply(object, function(x) {
-          a <- limitsLister(x)
-          if(length(a) == 0) a <- list(1:5) else a
+  } else if(is.data.frame(object)) {
+      if (any(sapply(object, function(x) inherits(x, "AsIs")))) {
+        if(is.list(limitsList) & length(limitsList) == 0) {
+          limitsList = lapply(object, function(x) lapply(seq_along(dim(x)),
+                                                           function(y) 1:5))
+        } else if(is.list(limitsList) & length(limitsList) > 0){
+          lm2 <- limitsLister(object)
+          if (isTRUE(all.equal(limitsList, lm2))) {
+            limitsList <- lapply(object, function(x) {
+              a <- limitsLister(x)
+              if(length(a) == 0) a <- list(1:5) else a
+              })
+          }
+          limitsList <- lapply(limitsList, function(x){
+            if (is.list(x)) {
+              x
+            } else {
+              list(x)
+            }
           })
-      }
-      limitsList <- lapply(limitsList, function(x){
-        if (is.list(x)) {
-          x
-        } else {
-          list(x)
         }
-      })
+        res <- lapply(seq_along(object),
+                      function(x){
+                        ap(object[[x]], limitsList[[x]])
+                      })
+        names(res) <- names(object)
+        res2 = list()
+        res2$apercu <- as.data.frame(lapply(res, function(x) x$apercu))
+        res2$dimensions <- lapply(res, function(x) x$dimensions)
+        res2$classes <- lapply(res, function(x) x$classes)
+        if (length(unique(res2$dimensions)) == 1 &
+            length(unique(res2$classes)) == 1){
+          res3 = list()
+          res3$apercu <- res2$apercu
+          res3$dimensions <- unlist(unique(res2$dimensions))
+          res3$classes <- unlist(unique(res2$classes))
+          res2 <- res3
+        }
+        class(res2) <- c("ap", class(res2))
+        return(res2)
+      } else {
+      aperWrapper(object, limitsList)
     }
-    res <- lapply(seq_along(object),
-                  function(x){
-                    ap(object[[x]], limitsList[[x]])
-                  })
-    names(res) <- names(object)
-    res2 = list()
-    res2$apercu <- as.data.frame(lapply(res, function(x) x$apercu))
-    res2$dimensions <- lapply(res, function(x) x$dimensions)
-    res2$classes <- lapply(res, function(x) x$classes)
-    if (length(unique(res2$dimensions)) == 1 &
-        length(unique(res2$classes)) == 1){
-      res3 = list()
-      res3$apercu <- res2$apercu
-      res3$dimensions <- unlist(unique(res2$dimensions))
-      res3$classes <- unlist(unique(res2$classes))
-      res2 <- res3
-    }
-    class(res2) <- c("ap", class(res2))
-    return(res2)
   } else {
     aperWrapper(object, limitsList)
   }
