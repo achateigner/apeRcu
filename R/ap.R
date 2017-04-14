@@ -110,46 +110,54 @@ ap <- function(object, limitsList=limitsLister(object)) {
              function(x) aperWrapper(x, limitsList[2:length(limitsList)]))
     }
   } else if(is.data.frame(object)) {
-      if (any(sapply(object, function(x) inherits(x, "AsIs")))) {
-        if(is.list(limitsList) & length(limitsList) == 0) {
-          limitsList = lapply(object, function(x) lapply(seq_along(dim(x)),
-                                                           function(y) 1:5))
-        } else if(is.list(limitsList) & length(limitsList) > 0){
-          lm2 <- limitsLister(object)
-          if (isTRUE(all.equal(limitsList, lm2))) {
-            limitsList <- lapply(object, function(x) {
-              a <- limitsLister(x)
-              if(length(a) == 0) a <- list(1:5) else a
-              })
-          }
-          limitsList <- lapply(limitsList, function(x){
-            if (is.list(x)) {
-              x
-            } else {
-              list(x)
-            }
+    if (any(sapply(object, function(x) inherits(x, "AsIs")))) {
+      if(is.list(limitsList) & length(limitsList) == 0) {
+        limitsList = lapply(object, function(x) lapply(seq_along(dim(x)),
+                                                       function(y) 1:5))
+      } else if(is.list(limitsList) & length(limitsList) > 0){
+        lm2 <- limitsLister(object)
+        if (isTRUE(all.equal(limitsList, lm2))) {
+          limitsList <- lapply(object, function(x) {
+            a <- limitsLister(x)
+            if(length(a) == 0) a <- list(1:5) else a
           })
         }
-        res <- lapply(seq_along(object),
-                      function(x){
-                        ap(object[[x]], limitsList[[x]])
-                      })
-        names(res) <- names(object)
-        res2 = list()
-        res2$apercu <- as.data.frame(lapply(res, function(x) x$apercu))
-        res2$dimensions <- lapply(res, function(x) x$dimensions)
-        res2$classes <- lapply(res, function(x) x$classes)
-        if (length(unique(res2$dimensions)) == 1 &
-            length(unique(res2$classes)) == 1){
-          res3 = list()
-          res3$apercu <- res2$apercu
-          res3$dimensions <- unlist(unique(res2$dimensions))
-          res3$classes <- unlist(unique(res2$classes))
-          res2 <- res3
-        }
-        class(res2) <- c("ap", class(res2))
-        return(res2)
-      } else {
+        limitsList <- lapply(limitsList, function(x){
+          if (is.list(x)) {
+            x
+          } else {
+            list(x)
+          }
+        })
+      }
+      res <- lapply(seq_along(object),
+                    function(x){
+                      ap(object[[x]], limitsList[[x]])
+                    })
+      names(res) <- names(object)
+      res2 = list()
+      res2$apercu <- as.data.frame(lapply(res, function(x) x$apercu))
+      res2$dimensions <- lapply(res, function(x) x$dimensions)
+      res2$classes <- lapply(res, function(x) x$classes)
+      if (length(unique(res2$dimensions)) == 1 &
+          length(unique(res2$classes)) == 1){
+        res3 = list()
+        res3$apercu <- res2$apercu
+        res3$dimensions <- unlist(unique(res2$dimensions))
+        res3$classes <- unlist(unique(res2$classes))
+        res2 <- res3
+      }
+      class(res2) <- c("ap", class(res2))
+      return(res2)
+    } else {
+      limitsList <- lapply(seq_along(dim(object)),
+                           function(x) {
+                             if(dim(object)[x] < 5){
+                               1:dim(object)[x]
+                             } else {
+                               limitsList[[x]]
+                             }
+                           })
       aperWrapper(object, limitsList)
     }
   } else {
@@ -164,9 +172,9 @@ ap <- function(object, limitsList=limitsLister(object)) {
 limitsLister <- function(objet){
   lapply(seq_along(dim(objet)), function(x){
     if (dim(objet)[x] > 5) {
-     1:5
+      1:5
     } else {
-     1:dim(objet)[x]
+      1:dim(objet)[x]
     }
   })
 }
@@ -191,6 +199,7 @@ apercu <- function(o, l=lapply(seq_along(dim(o)), function(x) 1:5)){
       l=list(c(1:5))
     }
   }
+  l <- fittingLimits(o, l)
   do.call(`[`, c(list(o), l))
 }
 
@@ -244,3 +253,29 @@ print.ap <- function(x, printAll = FALSE, ...){
   }
 }
 
+#' fittingLimits
+#' @param ob object with dimensions
+#' @param lim limits that we have to check
+#' @return the corrected limits
+#' @keywords internal
+fittingLimits <- function(ob, lim){
+  if (is.null(dim(ob))){
+    if(length(ob) <= 5){
+      exportList <- 1:5
+    } else{
+      exportList <- lim
+    }
+  } else {
+    exportList <- list()
+    for (x in seq_along(dim(ob))) {
+      if(dim(ob)[x] <= 5){
+        exportList[[x]] <- 1:dim(ob)[x]
+      } else {
+        if (length(lim) >= x){
+          exportList[[x]] <- lim[[x]]
+        }
+      }
+    }
+  }
+  return(exportList)
+}
