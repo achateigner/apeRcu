@@ -2,6 +2,7 @@
 #### [Current]
 
 #### 
+ * [3ac1bf2](../../commit/3ac1bf2) - __(Aurelien Chateigner)__ Added changelog and Readme
  * [4e69c7a](../../commit/4e69c7a) - __(Aurelien Chateigner)__ Added the fittingLimits function, resolved the problem of small data frames in objects. The library is now in version 0.2.1
  * [c0cfd24](../../commit/c0cfd24) - __(Aurelien Chateigner)__ goes to beta version : 0.2.0
  * [2e62d95](../../commit/2e62d95) - __(Aurelien Chateigner)__ added the compatibility with small objects, finished the tests
