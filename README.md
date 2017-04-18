@@ -207,7 +207,7 @@ If you want to contribute to this work, fill free to send a pull request.
 
 
 # License and author info
-Author and maintainer: Aurelien Chateigner <aurelien.chateigner@gmail.com>
-License: CC BY-SA 4.0
+Author and maintainer: Aurelien Chateigner <aurelien.chateigner@gmail.com>  
+License: CC BY-SA 4.0  
 Special thanks to: Vincent Segura, Facundo Muñoz and Thibaud Chauvin for tests
 and improvements.
