@@ -1,4 +1,4 @@
-context("ap")
+context("apercu")
 
 # Creation of objects
 v <- c(1:20)

@@ -1,4 +1,4 @@
 library(testthat)
-library(ap)
+library(apercu)
 
-test_check("ap")
+test_check("apercu")
