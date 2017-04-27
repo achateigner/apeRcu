@@ -1,7 +1,7 @@
 Package: apercu
 Type: Package
 Title: Apercu is Giving you a Quick Look at your Data
-Version: 0.2.1
+Version: 0.2.2
 Author: Aurelien Chateigner <aurelien.chateigner@gmail.com>
 Maintainer: Aurelien Chateigner <aurelien.chateigner@gmail.com>
 Description: The goal is to print an "aperçu", a short view of a vector, a
