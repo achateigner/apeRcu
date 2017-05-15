@@ -90,7 +90,7 @@ ap <- function(object, limitsList=limitsLister(object)) {
     if(is.list(limitsList) & length(limitsList) == 0) {
       limitsList=list(c(1:5))
       if (length(object) < 5){limitsList=list(c(1:length(object)))}
-      res <- lapply(object[c(limitsList[[1]])], function(x) aperWrapper(x))
+      res <- lapply(object[c(limitsList[[1]])], function(x) ap(x))
       res2 = list()
       res2$apercu <- lapply(res, function(x) x$apercu)
       res2$dimensions <- lapply(res, function(x) x$dimensions)

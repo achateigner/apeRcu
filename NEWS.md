@@ -1,5 +1,6 @@
 # apercu 0.2.2
 
+* Corrected a bug with lists of data.frames with AsIs matrices inside.
 * Added a `NEWS.md` file to track changes to the package.
 
 #### [Current]
