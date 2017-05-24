@@ -1,5 +1,6 @@
 Package: apercu
 Type: Package
+Date: 2017-05-24
 Title: Apercu is Giving you a Quick Look at your Data
 Version: 0.2.3
 Author: Aurelien Chateigner <aurelien.chateigner@gmail.com>
