@@ -1,6 +1,10 @@
 # apercu 0.2.3
 
 * Added the option pA (for print all) directly in ap
+* Corrected a bug for vectors of size inferior to 5
+* Corrected several bugs with lists recursion
+* Corrected minor bugs
+* Added the date in the DESCRIPTION file
 
 # apercu 0.2.2
 
