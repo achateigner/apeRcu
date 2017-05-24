@@ -4,12 +4,16 @@
 \alias{ap}
 \title{Apercu of your object}
 \usage{
-ap(object, limitsList = limitsLister(object))
+ap(object, limitsList = limitsLister(object), pA = FALSE)
 }
 \arguments{
 \item{object}{A vector, matrix, data frame, list or array}
 
-\item{limitsList}{A list with each element being the selection of each dimension}
+\item{limitsList}{A list with each element being the selection of each
+dimension}
+
+\item{pA}{Boolean, to only print the aperçu (FALSE) or to also print the
+dimensions and classes (TRUE)}
 }
 \value{
 A quick look or a selection of the data
@@ -61,13 +65,13 @@ ap(a2)
 ap(a3)
 
 # To print also the dimensions and classes
-print(ap(v), printAll = TRUE)
-print(ap(m), printAll = TRUE)
-print(ap(df), printAll = TRUE)
-print(ap(li), printAll = TRUE)
-print(ap(a), printAll = TRUE)
-print(ap(a2), printAll = TRUE)
-print(ap(a3), printAll = TRUE)
+ap(v, pA = TRUE)
+ap(m, pA = TRUE)
+ap(df, pA = TRUE)
+ap(li, pA = TRUE)
+ap(a, pA = TRUE)
+ap(a2, pA = TRUE)
+ap(a3, pA = TRUE)
 # if the size of the object is very small :
 sm <- matrix(1:4, 2, 2)
 sDf <- as.data.frame(sm)

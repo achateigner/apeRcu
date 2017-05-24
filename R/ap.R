@@ -11,7 +11,10 @@
 #' for each dimension. This function provides a simpler way of using the '['
 #' function, with the same speed and flexibility.
 #' @param object A vector, matrix, data frame, list or array
-#' @param limitsList A list with each element being the selection of each dimension
+#' @param limitsList A list with each element being the selection of each
+#' dimension
+#' @param pA Boolean, to only print the aperçu (FALSE) or to also print the
+#' dimensions and classes (TRUE)
 #' @return A quick look or a selection of the data
 #' @examples
 #' # Creation of a vector, a matrix, a data frame, a list and 3 arrays of 3, 4
@@ -47,13 +50,13 @@
 #' ap(a3)
 #'
 #' # To print also the dimensions and classes
-#' print(ap(v), printAll = TRUE)
-#' print(ap(m), printAll = TRUE)
-#' print(ap(df), printAll = TRUE)
-#' print(ap(li), printAll = TRUE)
-#' print(ap(a), printAll = TRUE)
-#' print(ap(a2), printAll = TRUE)
-#' print(ap(a3), printAll = TRUE)
+#' ap(v, pA = TRUE)
+#' ap(m, pA = TRUE)
+#' ap(df, pA = TRUE)
+#' ap(li, pA = TRUE)
+#' ap(a, pA = TRUE)
+#' ap(a2, pA = TRUE)
+#' ap(a3, pA = TRUE)
 
 #' # if the size of the object is very small :
 #' sm <- matrix(1:4, 2, 2)
@@ -85,7 +88,7 @@
 #' ap(gasoline)
 #' ap(gasoline, list(1:10, list(1:10,1:10)))
 #' @export
-ap <- function(object, limitsList=limitsLister(object)) {
+ap <- function(object, limitsList = limitsLister(object), pA = FALSE) {
   if (is.list(object) & !is.data.frame(object)) {
     if(is.list(limitsList) & length(limitsList) == 0) {
       limitsList=list(c(1:5))
@@ -106,8 +109,13 @@ ap <- function(object, limitsList=limitsLister(object)) {
       class(res2) <- c("ap", class(res2))
       return(res2)
     } else {
-      lapply(object[c(limitsList[[1]])],
-             function(x) aperWrapper(x, limitsList[2:length(limitsList)]))
+        resultat <- lapply(object[c(limitsList[[1]])],
+                           function(x) aperWrapper(x, limitsList[2:length(limitsList)]))
+      if (pA == FALSE){
+        resultat
+      } else if (pA == TRUE){
+        print(resultat, printAll = TRUE)
+      }
     }
   } else if(is.data.frame(object)) {
     if (any(sapply(object, function(x) inherits(x, "AsIs")))) {
@@ -158,10 +166,20 @@ ap <- function(object, limitsList=limitsLister(object)) {
                                limitsList[[x]]
                              }
                            })
-      aperWrapper(object, limitsList)
+      resultat <- aperWrapper(object, limitsList)
+      if (pA == FALSE){
+        resultat
+      } else if (pA == TRUE){
+        print(resultat, printAll = TRUE)
+      }
     }
   } else {
-    aperWrapper(object, limitsList)
+    resultat <- aperWrapper(object, limitsList)
+    if (pA == FALSE){
+      resultat
+    } else if (pA == TRUE){
+      print(resultat, printAll = TRUE)
+    }
   }
 }
 
@@ -261,7 +279,7 @@ print.ap <- function(x, printAll = FALSE, ...){
 fittingLimits <- function(ob, lim){
   if (is.null(dim(ob))){
     if(length(ob) <= 5){
-      exportList <- 1:5
+      exportList <- list(1:length(ob))
     } else{
       exportList <- lim
     }

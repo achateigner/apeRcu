@@ -1,3 +1,7 @@
+# apercu 0.2.3
+
+* Added the option pA (for print all) directly in ap
+
 # apercu 0.2.2
 
 * Corrected a bug with lists of data.frames with AsIs matrices inside.
