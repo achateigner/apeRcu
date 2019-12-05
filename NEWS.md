@@ -1,3 +1,7 @@
+# apercu 0.2.4
+
+* Corrected the tests so that they pass with the futur R 4.0.0 and on debian with  _R_CLASS_MATRIX_ARRAY_=true
+
 # apercu 0.2.3
 
 * Added the option pA (for print all) directly in ap
