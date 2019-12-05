@@ -32,48 +32,48 @@ test_that("works on vectors", {
 test_that("works on matrices", {
   expect_equal(ap(m)$apercu, m[1:5,1:5])
   expect_equal(ap(m)$dimensions, c(10,10))
-  expect_equal(ap(m)$classes, "matrix")
+  expect_equal(ap(m)$classes[1], "matrix")
 })
 
 test_that("works on small matrices", {
   expect_equal(ap(sm)$apercu, sm[1:2,1:2])
   expect_equal(ap(sm)$dimensions, c(2,2))
-  expect_equal(ap(sm)$classes, "matrix")
+  expect_equal(ap(sm)$classes[1], "matrix")
 })
 
 test_that("works on data.frames", {
   expect_equal(ap(df)$apercu, df[1:5,1:5])
   expect_equal(ap(df)$dimensions, c(10,10))
   expect_equal(ap(df)$classes,
-               list(object="data.frame", elements="integer"))
+               list(object = "data.frame", elements = "integer"))
 })
 
 test_that("works on small data.frames", {
   expect_equal(ap(sDf)$apercu, sDf[1:2,1:2])
   expect_equal(ap(sDf)$dimensions, c(2,2))
   expect_equal(ap(sDf)$classes,
-               list(object="data.frame", elements="integer"))
+               list(object = "data.frame", elements = "integer"))
 })
 
 test_that("works on data.frames with AsIs Matrices in it", {
   expect_equal(ap(gasoline)$apercu,
-               data.frame(octane=gasoline$octane[1:5],
-                          NIR=I(gasoline$NIR[1:5,1:5])))
+               data.frame(octane = gasoline$octane[1:5],
+                          NIR = I(gasoline$NIR[1:5, 1:5])))
   expect_equal(ap(gasoline)$dimensions,
-               list(octane=NULL, NIR=c(60,401)))
-  expect_equal(ap(gasoline)$classes, list(octane="numeric", NIR="AsIs"))
+               list(octane = NULL, NIR = c(60, 401)))
+  expect_equal(ap(gasoline)$classes, list(octane = "numeric", NIR = "AsIs"))
 })
 
 test_that("works on lists", {
   expect_equal(ap(li)$apercu, lapply(li[1:5], function(x) x[1:5,1:5]))
   expect_equal(ap(li)$dimensions, c(10,10))
-  expect_equal(ap(li)$classes, "matrix")
+  expect_equal(ap(li)$classes[1], "matrix")
 })
 
 test_that("works on small lists", {
   expect_equal(ap(lis)$apercu, lapply(lis, function(x) x[1:5,1:5]))
   expect_equal(ap(lis)$dimensions, c(10,10))
-  expect_equal(ap(lis)$classes, "matrix")
+  expect_equal(ap(lis)$classes[1], "matrix")
 })
 
 test_that("works on arrays of 3 dimensions", {

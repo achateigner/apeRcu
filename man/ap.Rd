@@ -55,7 +55,7 @@ dimnames(a3) <- list(letters[1:10], letters[1:10], letters[1:10],
     letters[1:10], letters[1:10])
 
 
-# Automatic aperçu of the objects
+# Automatic aperÃ§u of the objects
 ap(v)
 ap(m)
 ap(df)
@@ -78,7 +78,7 @@ sDf <- as.data.frame(sm)
 ap(sm)
 ap(sDf)
 
-# Specific aperçu of the objects
+# Specific aperÃ§u of the objects
 ap(v, list(1:2))
 ap(m, list(c(1,3), 1:5))
 ## outputs a vector as only one dimension is given
